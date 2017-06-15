@@ -18,9 +18,9 @@
 
 #define SLEEP_DELAY_IN_SECONDS  300
 
-#define WATER_TIME_MIN	5
-#define WATER_TIME_MAX	7
-#define GROUND_HUMIDITY_MIN 500
+#define WATER_TIME_MIN	20
+#define WATER_TIME_MAX	23
+#define GROUND_HUMIDITY_MIN 700
 #define GROUND_HUMIDITY_HYSTERESIS 50
 
 //set SSID and password of WiFi network
@@ -28,7 +28,7 @@ const char* ssid = "..........";
 const char* password = "..........";
 const int AnalogIn  = A0;
 const int waterDelayS = 10;
-const int waterPumpPin = 5;
+const int waterPumpPin = 5;	//D1 - NodeMCU
 
 int timezone = 3;
 int dst = 0;
@@ -38,14 +38,15 @@ int g_humidity = 0;
 void setup (void)
 {
 	Serial.begin(115200);
-	Serial.setDebugOutput(true);
+	//Serial.setDebugOutput(true);
 	
 	pinMode(waterPumpPin, OUTPUT);
-	pinMode(waterPumpPin, LOW);
+	digitalWrite(waterPumpPin, LOW);
 
     WiFi.mode(WIFI_STA);
     WiFi.begin(ssid, password);
-    Serial.println("\nConnecting to WiFi");
+    Serial.println("Connecting to WiFi");
+    waiting = 0;
     while (WiFi.status() != WL_CONNECTED) 
     {
       Serial.print(".");
@@ -53,27 +54,29 @@ void setup (void)
       waiting++;
       if(waiting > 10) //testing of connection
       {
-    	  Serial.println("\nCan not connect to WiFi");
-		  ESP.deepSleep(SLEEP_DELAY_IN_SECONDS * 1000000, WAKE_RF_DEFAULT);
+	Serial.println("Can not connect to WiFi");
+	ESP.deepSleep(SLEEP_DELAY_IN_SECONDS * 1000000, WAKE_RF_DEFAULT);
       }
     }
 
     configTime(3 * 3600, 0, "pool.ntp.org", "time.nist.gov");
-    Serial.println("\nWaiting for time");
+    Serial.println("Waiting for time");
+    waiting = 0;
     while (!time(nullptr)) 
     {
     	Serial.print(".");
      	delay(1000);
-		if(waiting > 10) //waiting for time
+	waiting++;
+	if(waiting > 10) //waiting for time
       	{
-    		Serial.println("\nTime is not available");
+    		Serial.println("Time is not available");
     		ESP.deepSleep(SLEEP_DELAY_IN_SECONDS * 1000000, WAKE_RF_DEFAULT);
       	}
     }
     Serial.println("");
 
 	g_humidity = analogRead(AnalogIn);
-	Serial.println("\nHumidity of ground");
+	Serial.println("Humidity of ground: ");
  	Serial.println(g_humidity);
 }
 
@@ -82,28 +85,37 @@ void loop (void)
 	int nowHour = hour(now);
  	Serial.println(ctime(&now));
  	
- 	pinMode(waterPumpPin, LOW);
+ 	digitalWrite(waterPumpPin, LOW);
  	
  	int g_humidity_min = GROUND_HUMIDITY_MIN - GROUND_HUMIDITY_HYSTERESIS;
  	int g_humidity_max = GROUND_HUMIDITY_MIN + GROUND_HUMIDITY_HYSTERESIS;
 
-	if((nowHour > WATER_TIME_MIN) && (now < WATER_TIME_MAX)) 
+	if((nowHour > WATER_TIME_MIN) && (nowHour < WATER_TIME_MAX)) 
 	{
-		Serial.println("\nTime is OK");
-		if((g_humidity > g_humidity_min) && (g_humidity < g_humidity_max))
+		Serial.println("Time IS ok");
+		if((g_humidity > g_humidity_min) /*&& (g_humidity < g_humidity_max)*/)
 		{
-			Serial.println("\nGround humidity is OK");
-			pinMode(waterPumpPin, HIGH);
+			Serial.println("Ground humidity IS ok");
+			digitalWrite(waterPumpPin, HIGH);
 			for(int i; i < waterDelayS; i++)
 			{
-				Serial.print("!");
+				Serial.print(">");
 				delay(1000);
 			}
-			pinMode(waterPumpPin, LOW);
+			digitalWrite(waterPumpPin, LOW);
+		}
+		else
+		{
+			Serial.println("Humidity is NOT ok");
 		}
 	}
+ 	else
+ 	{
+	 	Serial.println("Time is NOT ok");
+ 	}
 	
-	pinMode(waterPumpPin, LOW);
+	digitalWrite(waterPumpPin, LOW);
 	//sleep
+ 	Serial.println("Go to sleep");
 	ESP.deepSleep(SLEEP_DELAY_IN_SECONDS * 1000000, WAKE_RF_DEFAULT);
 }
