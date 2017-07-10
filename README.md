@@ -3,8 +3,8 @@ Watering system for a few plants. The main component is WiFi module NodeMCU with
 The device contains two switching parts for pump/valve or another device. <br>
 <br>
 Websites:
-(CZ) https://chiptron.cz
-(EN) https://time4ee.com
+(CZ) https://chiptron.cz<br>
+(EN) https://time4ee.com<br>
 <br>
 Important components: <br>
 Relays (Coil Resistance 500 ohm, Nominal Coil Voltage 5 VDC, Switching Voltage 200 VDC, Switching Current 0.5 A) https://www.gme.cz/data/attachments/dsh.634-072.1.pdf <br>
