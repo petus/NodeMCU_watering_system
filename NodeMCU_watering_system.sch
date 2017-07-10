@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="7.6.0">
+<eagle version="8.2.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -8214,7 +8214,7 @@ http://www.fairchildsemi.com/ds/LM/LM7805.pdf</description>
 <part name="JP7" library="SparkFun" deviceset="M02" device="LOCK_LONGPADS" value="ouput2LED"/>
 <part name="R5" library="rcl" deviceset="R-EU_" device="M0805" value="820R"/>
 <part name="R6" library="rcl" deviceset="R-EU_" device="M0805" value="820R"/>
-<part name="JP4" library="SparkFun" deviceset="M02" device="LOCK_LONGPADS" value="ouput1"/>
+<part name="JP4" library="SparkFun" deviceset="M02" device="LOCK_LONGPADS" value="output1"/>
 <part name="JP5" library="SparkFun" deviceset="M02" device="LOCK_LONGPADS" value="output2"/>
 <part name="D1" library="#PaJa_30" deviceset="1N4007" device="_SM-1"/>
 <part name="D2" library="#PaJa_30" deviceset="1N4007" device="_SM-1"/>
