@@ -18,10 +18,10 @@
 
 #define SLEEP_DELAY_IN_SECONDS  300 //D0 Wake_Up pin
 
-#define WATER_TIME_MIN  18
-#define WATER_TIME_MAX  23
-#define SOIL_MOISTURE_MIN 650
-#define SOIL_MOISTURE_HYST 0
+#define WATER_TIME_MIN  18 //start time
+#define WATER_TIME_MAX  23 //end time
+#define SOIL_MOISTURE_MIN 650 //min value of soil moisture
+#define SOIL_MOISTURE_HYST 0 //hyteresis of soil moisture
 
 //set SSID and password of WiFi network
 const char* ssid = "SSID";
